@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Article</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header>
+        <h1>Create New Article</h1>
+    </header>
+
+    <main>
+        <form method="POST">
+            <label>Title</label><br>
+            <input type="text" name="title" required><br><br>
+
+            <label>Category</label><br>
+            <input type="text" name="category" required><br><br>
+
+            <label>Author</label><br>
+            <input type="text" name="author" required><br><br>
+
+            <label>Content</label><br>
+            <textarea name="content" rows="5" required></textarea><br><br>
+
+            <button type="submit">Publish Article</button>
+        </form>
+    </main>
+</body>
+</html>
