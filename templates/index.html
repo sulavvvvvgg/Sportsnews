@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Sports News</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
     <header>
@@ -11,14 +12,17 @@
 
     <main>
         <h2>Latest Articles</h2>
+
+        {% for article in articles %}
         <div>
-            <h3>Messi scores hat-trick against algeria fifa 2026 worldcup</h3>
-            <p>Posted by Admin - Football</p>
+            <h3>{{ article.title }}</h3>
+            <p>Posted by {{ article.author }} - {{ article.category }}</p>
+            <p>{{ article.content }}</p>
+            <a href="{{ url_for('edit_article', article_id=article.id) }}">Edit</a>
+            <a href="{{ url_for('delete_article', article_id=article.id) }}">Delete</a>
         </div>
-        <div>
-            <h3>Lionel messi still one of the contender for ballondor</h3>
-            <p>Posted by Admin - Football</p>
-        </div>
+        {% endfor %}
+
     </main>
 </body>
 </html>
