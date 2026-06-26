@@ -65,6 +65,9 @@ def home():
 @app.route('/create', methods=['GET', 'POST'])
 @login_required
 def create_article():
+    if not current_user.is_admin:
+        return "Access denied. Admins only."
+
     if request.method == 'POST':
         title = request.form['title']
         content = request.form['content']
@@ -83,6 +86,8 @@ def create_article():
 @login_required
 def edit_article(article_id):
     article = Article.query.get(article_id)
+    if not current_user.is_admin:
+        return "Access denied. Admins only."
 
     if request.method == 'POST':
         article.title = request.form['title']
