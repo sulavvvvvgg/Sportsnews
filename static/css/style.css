@@ -101,3 +101,55 @@ main h2 {
     color: #1a1a2e;
     font-weight: bold;
 }
+/* Forms (login, register, create, edit) */
+.form-box {
+    background: white;
+    max-width: 400px;
+    margin: 3rem auto;
+    padding: 2rem;
+    border-radius: 6px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+}
+
+.form-box h2 {
+    margin-bottom: 1.2rem;
+    border-left: 4px solid #c00;
+    padding-left: 0.6rem;
+}
+
+.form-box label {
+    display: block;
+    margin-top: 0.8rem;
+    margin-bottom: 0.3rem;
+    font-size: 0.9rem;
+    font-weight: bold;
+}
+
+.form-box input,
+.form-box textarea {
+    width: 100%;
+    padding: 0.6rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 0.95rem;
+}
+
+.form-box button {
+    margin-top: 1.2rem;
+    background-color: #1a1a2e;
+    color: white;
+    border: none;
+    padding: 0.7rem 1.4rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.95rem;
+}
+
+.form-box button:hover {
+    background-color: #2e2e54;
+}
+
+.form-link {
+    margin-top: 1rem;
+    font-size: 0.85rem;
+}
