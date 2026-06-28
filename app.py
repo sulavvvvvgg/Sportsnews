@@ -3,6 +3,12 @@ from models import db, Article
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from models import db, Article, User
 from werkzeug.security import generate_password_hash, check_password_hash
+import requests
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+NEWS_API_KEY = os.getenv('NEWS_API_KEY')
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://sportsuser:sulavgg2005@localhost/sportsnews'
@@ -108,7 +114,42 @@ def delete_article(article_id):
     db.session.commit()
     return redirect(url_for('home'))
 
+@app.route('/fetch-news/<sport>')
+@login_required
+def fetch_news(sport):
+    if not current_user.is_admin:
+        return "Access denied. Admins only."
+
+    url = "https://newsapi.org/v2/everything"
+    params = {
+        'q': sport,
+        'sortBy': 'publishedAt',
+        'language': 'en',
+        'pageSize': 5,
+        'apiKey': NEWS_API_KEY
+    }
+
+    response = requests.get(url, params=params)
+    data = response.json()
+
+    if data['status'] == 'ok':
+        for item in data['articles']:
+            title = item['title']
+            content = item['description'] or "No description available."
+            author = item['source']['name']
+
+            existing = Article.query.filter_by(title=title).first()
+            if not existing:
+                new_article = Article(title=title, content=content, category=sport, author=author)
+                db.session.add(new_article)
+
+        db.session.commit()
+        return redirect(url_for('home'))
+
+    return "Failed to fetch news"
+
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
     app.run(debug=True)
+
