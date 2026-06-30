@@ -29,6 +29,16 @@
         <a href="#">Boxing</a>
         <a href="#">Tennis</a>
     </div>
+    {% if current_user.is_authenticated and current_user.is_admin %}
+    <div class="category-bar">
+        <strong style="margin-right: 1rem;">Fetch News:</strong>
+        <a href="{{ url_for('fetch_news', sport='football') }}">Football</a>
+        <a href="{{ url_for('fetch_news', sport='cricket') }}">Cricket</a>
+        <a href="{{ url_for('fetch_news', sport='basketball') }}">Basketball</a>
+        <a href="{{ url_for('fetch_news', sport='boxing') }}">Boxing</a>
+        <a href="{{ url_for('fetch_news', sport='tennis') }}">Tennis</a>
+   </div>
+   {% endif %}
 
     <main>
         <h2>Latest Articles</h2>
