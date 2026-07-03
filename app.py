@@ -64,9 +64,12 @@ def logout():
 
 @app.route('/')
 def home():
-    articles = Article.query.all()
-    return render_template('index.html', articles=articles)
-
+    category = request.args.get('category')
+    if category:
+        articles = Article.query.filter_by(category=category).all()
+    else:
+        articles = Article.query.all()
+    return render_template('index.html', articles=articles, selected_category=category)
 
 @app.route('/create', methods=['GET', 'POST'])
 @login_required
@@ -80,7 +83,7 @@ def create_article():
         category = request.form['category']
         author = request.form['author']
 
-        new_article = Article(title=title, content=content, category=category, author=author)
+        new_article = Article(title=title, content=content, category=category.lower(), author=author)
         db.session.add(new_article)
         db.session.commit()
 
