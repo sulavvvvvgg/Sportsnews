@@ -22,12 +22,16 @@
         </div>
     </div>
 
+
     <div class="category-bar">
-        <a href="#">Football</a>
-        <a href="#">Cricket</a>
-        <a href="#">Basketball</a>
-        <a href="#">Boxing</a>
-        <a href="#">Tennis</a>
+        <a href="{{ url_for('home') }}">All</a>
+        <a href="{{ url_for('home', category='football') }}">Football</a>
+        <a href="{{ url_for('home', category='cricket') }}">Cricket</a>
+        <a href="{{ url_for('home', category='basketball') }}">Basketball</a>
+        <a href="{{ url_for('home', category='boxing') }}">Boxing</a>
+        <a href="{{ url_for('home', category='tennis') }}">Tennis</a>
+    </div>
+
     </div>
     {% if current_user.is_authenticated and current_user.is_admin %}
     <div class="category-bar">
