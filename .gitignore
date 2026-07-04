@@ -4,3 +4,4 @@ __pycache__/
 site.db
 instance/
 .env
+*.swp
