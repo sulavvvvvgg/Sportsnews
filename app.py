@@ -140,10 +140,11 @@ def fetch_news(sport):
             title = item['title']
             content = item['description'] or "No description available."
             author = item['source']['name']
+            image_url = item.get('urlToImage', None)
 
             existing = Article.query.filter_by(title=title).first()
             if not existing:
-                new_article = Article(title=title, content=content, category=sport, author=author)
+                new_article = Article(title=title, content=content, category=sport, author=author, image_url=image_url)
                 db.session.add(new_article)
 
         db.session.commit()
