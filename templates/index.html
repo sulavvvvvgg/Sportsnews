@@ -47,9 +47,12 @@
     <main>
         <h2>Latest Articles</h2>
 
-        <div class="article-grid">
+    <div class="article-grid">
             {% for article in articles %}
             <div class="article-card">
+                {% if article.image_url %}
+                <img src="{{ article.image_url }}" alt="article image">
+                {% endif %}
                 <h3>{{ article.title }}</h3>
                 <div class="article-meta">By {{ article.author }} · {{ article.category }}</div>
                 <p>{{ article.content }}</p>
