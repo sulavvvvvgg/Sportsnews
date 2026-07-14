@@ -152,6 +152,11 @@ def fetch_news(sport):
 
     return "Failed to fetch news"
 
+@app.route('/article/<int:article_id>')
+def article_detail(article_id):
+    article = Article.query.get(article_id)
+    return render_template('article_detail.html', article=article)
+
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
