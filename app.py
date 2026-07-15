@@ -167,6 +167,38 @@ def article_detail(article_id):
     article = Article.query.get(article_id)
     return render_template('article_detail.html', article=article)
 
+@app.route('/profile', methods=['GET', 'POST'])
+@login_required
+def profile():
+    error = None
+    success = None
+    if request.method == 'POST':
+        new_username = request.form['username']
+        new_password = request.form['password']
+
+        if not new_username:
+            error = "Username cannot be empty."
+        elif new_username != current_user.username and User.query.filter_by(username=new_username).first():
+            error = "Username already taken."
+        else:
+            current_user.username = new_username
+            if new_password:
+                current_user.password = generate_password_hash(new_password)
+            db.session.commit()
+            success = "Profile updated successfully."
+
+    return render_template('profile.html', error=error, success=success)
+
+
+@app.route('/delete-account')
+@login_required
+def delete_account():
+    user = User.query.get(current_user.id)
+    logout_user()
+    db.session.delete(user)
+    db.session.commit()
+    return redirect(url_for('home'))
+
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
