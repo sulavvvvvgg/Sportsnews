@@ -10,7 +10,7 @@
         <h1>🏆 Sports News</h1>
         <div class="nav-links">
             {% if current_user.is_authenticated %}
-                <span>Hello, {{ current_user.username }}</span>
+                <a href="{{ url_for('profile') }}">{{ current_user.username }}</a>
                 <a href="{{ url_for('logout') }}">Logout</a>
                 {% if current_user.is_admin %}
                     <a href="{{ url_for('create_article') }}">New Article</a>
