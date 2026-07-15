@@ -16,12 +16,15 @@
     <main>
         <div class="form-box">
             <h2>Register</h2>
+            {% if error %}
+            <p style="color: red; margin-bottom: 1rem;">{{ error }}</p>
+            {% endif %}
             <form method="POST">
                 <label>Username</label>
-                <input type="text" name="username" required>
+                <input type="text" name="username">
 
                 <label>Password</label>
-                <input type="password" name="password" required>
+                <input type="password" name="password">
 
                 <button type="submit">Register</button>
             </form>
