@@ -26,6 +26,13 @@ class Comment(db.Model):
     def __repr__(self):
         return f"<Comment {self.id}>"
 
+class Category(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(50), unique=True, nullable=False)
+
+    def __repr__(self):
+        return f"<Category {self.id} - {self.name}>"
+
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
