@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for
 from models import db, Article
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
-from models import db, Article, User
+from models import db, Article, User, Comment, Category
 from werkzeug.security import generate_password_hash, check_password_hash
 from models import db, Article, User, Comment
 import requests
@@ -246,6 +246,60 @@ def delete_comment(comment_id):
     db.session.commit()
     return redirect(url_for('article_detail', article_id=article_id))
 
+
+@app.route('/categories')
+def categories():
+    all_categories = Category.query.all()
+    return render_template('categories.html', categories=all_categories)
+
+
+@app.route('/category/add', methods=['GET', 'POST'])
+@login_required
+def add_category():
+    if not current_user.is_admin:
+        return "Access denied. Admins only."
+
+    error = None
+    if request.method == 'POST':
+        name = request.form['name'].lower()
+        if not name:
+            error = "Category name cannot be empty."
+        elif Category.query.filter_by(name=name).first():
+            error = "Category already exists."
+        else:
+            new_category = Category(name=name)
+            db.session.add(new_category)
+            db.session.commit()
+            return redirect(url_for('categories'))
+
+    return render_template('add_category.html', error=error)
+
+
+@app.route('/category/edit/<int:category_id>', methods=['GET', 'POST'])
+@login_required
+def edit_category(category_id):
+    if not current_user.is_admin:
+        return "Access denied. Admins only."
+
+    category = Category.query.get(category_id)
+    if request.method == 'POST':
+        category.name = request.form['name'].lower()
+        db.session.commit()
+        return redirect(url_for('categories'))
+
+    return render_template('edit_category.html', category=category)
+
+
+@app.route('/category/delete/<int:category_id>')
+@login_required
+def delete_category(category_id):
+    if not current_user.is_admin:
+        return "Access denied. Admins only."
+
+    category = Category.query.get(category_id)
+    db.session.delete(category)
+    db.session.commit()
+    return redirect(url_for('categories'))
 
 if __name__ == '__main__':
     with app.app_context():
