@@ -3,6 +3,7 @@ from models import db, Article
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from models import db, Article, User
 from werkzeug.security import generate_password_hash, check_password_hash
+from models import db, Article, User, Comment
 import requests
 from dotenv import load_dotenv
 import os
@@ -165,7 +166,8 @@ def fetch_news(sport):
 @app.route('/article/<int:article_id>')
 def article_detail(article_id):
     article = Article.query.get(article_id)
-    return render_template('article_detail.html', article=article)
+    comments = Comment.query.filter_by(article_id=article_id).all()
+    return render_template('article_detail.html', article=article, comments=comments)
 
 @app.route('/profile', methods=['GET', 'POST'])
 @login_required
@@ -198,6 +200,52 @@ def delete_account():
     db.session.delete(user)
     db.session.commit()
     return redirect(url_for('home'))
+
+@app.route('/article/<int:article_id>/comment', methods=['POST'])
+@login_required
+def add_comment(article_id):
+    content = request.form['content']
+    if not content:
+        return redirect(url_for('article_detail', article_id=article_id))
+
+    new_comment = Comment(
+        content=content,
+        user_id=current_user.id,
+        article_id=article_id,
+        username=current_user.username
+    )
+    db.session.add(new_comment)
+    db.session.commit()
+    return redirect(url_for('article_detail', article_id=article_id))
+
+
+@app.route('/comment/edit/<int:comment_id>', methods=['GET', 'POST'])
+@login_required
+def edit_comment(comment_id):
+    comment = Comment.query.get(comment_id)
+    if comment.user_id != current_user.id and not current_user.is_admin:
+        return "Access denied."
+
+    if request.method == 'POST':
+        comment.content = request.form['content']
+        db.session.commit()
+        return redirect(url_for('article_detail', article_id=comment.article_id))
+
+    return render_template('edit_comment.html', comment=comment)
+
+
+@app.route('/comment/delete/<int:comment_id>')
+@login_required
+def delete_comment(comment_id):
+    comment = Comment.query.get(comment_id)
+    if comment.user_id != current_user.id and not current_user.is_admin:
+        return "Access denied."
+
+    article_id = comment.article_id
+    db.session.delete(comment)
+    db.session.commit()
+    return redirect(url_for('article_detail', article_id=article_id))
+
 
 if __name__ == '__main__':
     with app.app_context():
