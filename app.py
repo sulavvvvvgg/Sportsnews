@@ -80,7 +80,8 @@ def home():
         articles = Article.query.filter_by(category=category).all()
     else:
         articles = Article.query.all()
-    return render_template('index.html', articles=articles, selected_category=category)
+    all_categories = Category.query.all()
+    return render_template('index.html', articles=articles, selected_category=category, categories=all_categories)
 
 @app.route('/create', methods=['GET', 'POST'])
 @login_required
