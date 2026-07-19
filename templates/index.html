@@ -14,6 +14,7 @@
                 <a href="{{ url_for('logout') }}">Logout</a>
                 {% if current_user.is_admin %}
                     <a href="{{ url_for('create_article') }}">New Article</a>
+                    <a href="{{ url_for('pending_articles') }}">Pending</a>
                 {% endif %}
             {% else %}
                 <a href="{{ url_for('login') }}">Login</a>
@@ -23,12 +24,12 @@
     </div>
 
     <div class="category-bar">
-    <a href="{{ url_for('home') }}">All</a>
-    {% for category in categories %}
-    <a href="{{ url_for('home', category=category.name) }}">{{ category.name | capitalize }}</a>
-    {% endfor %}
+        <a href="{{ url_for('home') }}">All</a>
+        {% for category in categories %}
+        <a href="{{ url_for('home', category=category.name) }}">{{ category.name | capitalize }}</a>
+        {% endfor %}
     </div>
-   
+
     {% if current_user.is_authenticated and current_user.is_admin %}
     <div class="category-bar">
         <strong style="margin-right: 1rem;">Fetch News:</strong>
@@ -38,10 +39,15 @@
     </div>
     {% endif %}
 
+    {% if current_user.is_authenticated and not current_user.is_admin %}
+    <div style="text-align:center; margin:1.5rem 0;">
+        <a href="{{ url_for('create_article') }}" style="background:#c00; color:white; padding:0.8rem 2rem; border-radius:4px; text-decoration:none; font-size:1rem;">✍️ Submit Your Article</a>
+    </div>
+    {% endif %}
+
     <main>
         <h2>Latest Articles</h2>
-
-    <div class="article-grid">
+        <div class="article-grid">
             {% for article in articles %}
             <div class="article-card">
                 {% if article.image_url %}
@@ -58,6 +64,10 @@
                 {% endif %}
             </div>
             {% endfor %}
+
+            {% if not articles %}
+            <p style="color:#888;">No articles available in this category at the moment.</p>
+            {% endif %}
         </div>
     </main>
 </body>

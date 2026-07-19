@@ -11,6 +11,7 @@ class Article(db.Model):
     author = db.Column(db.String(100), nullable=False)
     date_posted = db.Column(db.DateTime, default=db.func.now())
     image_url = db.Column(db.String(500), nullable=True)
+    status = db.Column(db.String(20), default='pending')
 
     def __repr__(self):
         return f"<Article {self.id} - {self.title}>"
